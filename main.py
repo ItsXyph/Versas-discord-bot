@@ -15,9 +15,4 @@ async def purge(ctx, limit : int):
     await ctx.channel.purge(limit = limit)
     await ctx.send(f"{limit} messages have been deleted.")
 
-@purge.error
-async def purge_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You don't have the permission to do that!")
-
 bot.run(os.getenv('TOKEN'))
