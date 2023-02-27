@@ -1,22 +1,29 @@
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
+from nextcord import Interaction
 import datetime
 import dotenv
 import os
 
-bot = discord.Bot()
 token = dotenv.load_dotenv()
+intents = nextcord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix="$", intents=intents)
 
 @bot.event
 async def on_ready():
     print(f"We've logged in as: {bot.user}")
 
-@bot.slash_command(name = "purge", description = "Purges a set amount of messages.")
-async def purge(ctx, limit : int):
-    embed = discord.Embed(color=discord.Colour.blurple(), title=f"{limit} Messages were purged.", timestamp=datetime.datetime.now())
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1048935994323370024/1079520156398653450/v-letter-logo-icon-for-business-and-company-vector.jpg")
-    embed.set_author(name=bot.user.name, icon_url="https://cdn.discordapp.com/attachments/1048935994323370024/1079520156398653450/v-letter-logo-icon-for-business-and-company-vector.jpg")
-    await ctx.channel.purge(limit = limit)
-    await ctx.respond(embed=embed)
+cogs_list = []
+
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        cogs_list.append("cogs." + filename[:-3])
+
+if __name__ == '__main__':
+    for extension in cogs_list:
+        bot.load_extension(extension)
+
 
 bot.run(os.getenv('TOKEN'))
