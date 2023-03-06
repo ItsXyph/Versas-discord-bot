@@ -40,9 +40,16 @@ class Moderation(commands.Cog):
 
     
     @nextcord.slash_command(name = "mute", description = "Mutes a member for a given time", guild_ids = [TEST_GUILD_ID, VERSAS_GUILD_ID])
-    async def mute(self, interaction: Interaction, member: nextcord.Member):
-        pass
-
+    async def mute(self, interaction: Interaction, member: nextcord.Member, duration):
+        multiplier = 1
+        if "s".lower() in duration:
+            multiplier = 1
+        elif "m".lower() in duration:
+            multiplier = 60
+        elif "h".lower() in duration:
+            multiplier = 3600        
+        elif 'd'.lower() in duration:
+            multiplier = 86400
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
