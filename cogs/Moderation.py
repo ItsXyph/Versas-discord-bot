@@ -39,17 +39,22 @@ class Moderation(commands.Cog):
         await interaction.guild.unban(user)
 
     
-    @nextcord.slash_command(name = "mute", description = "Mutes a member for a given time", guild_ids = [TEST_GUILD_ID, VERSAS_GUILD_ID])
+    @nextcord.slash_command(name = "mute", description = "Mutes a member for a given time", guild_ids = [TEST_GUILD_ID, VERSAS_GUILD_ID], default_member_permissions= nextcord.Permissions.moderate_members)
     async def mute(self, interaction: Interaction, member: nextcord.Member, duration):
-        multiplier = 1
-        if "s".lower() in duration:
-            multiplier = 1
-        elif "m".lower() in duration:
-            multiplier = 60
-        elif "h".lower() in duration:
-            multiplier = 3600        
-        elif 'd'.lower() in duration:
-            multiplier = 86400
+            if duration[-1].lower() == "s".lower():
+                await member.timeout(datetime.timedelta(seconds = int(duration[:-1])))
+                await interaction.response.send_message(f'{member.mention} has been muted for {duration[:-1]} seconds.')
+            elif duration[-1].lower() == "m".lower():
+                await member.timeout(datetime.timedelta(minutes=int(duration[:-1])))
+                await interaction.response.send_message(f'{member.mention} has been muted for {duration[:-1]} minutes.')
+            elif duration[-1].lower() == "h".lower():
+                await member.timeout(datetime.timedelta(hours=int(duration[:-1])))
+                await interaction.response.send_message(f'{member.mention} has been muted for {duration[:-1]} hours.')
+            elif duration[-1].lower() == 'd'.lower():
+                await member.timeout(datetime.timedelta(days=int(duration[:-1])))
+                await interaction.response.send_message(f'{member.mention} has been muted for {duration[:-1]} days.')
+            else:
+                await interaction.response.send_message("I'm sorry, this input is incorrect. Input a number (I.E: 10) followed by either s, m, h, or d (seconds, minutes, hours or days).", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
