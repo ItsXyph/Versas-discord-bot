@@ -6,8 +6,7 @@ import dotenv
 import os
 
 token = dotenv.load_dotenv()
-intents = nextcord.Intents.default()
-intents.members = True
+intents = nextcord.Intents.all()
 
 bot = commands.Bot(command_prefix="$", intents=intents)
 
