@@ -3,8 +3,6 @@ from nextcord.ext import commands
 from nextcord.ext import application_checks
 from nextcord import Interaction
 import datetime
-import dotenv
-import os
 
 class Moderation(commands.Cog):
 
@@ -70,10 +68,8 @@ class Moderation(commands.Cog):
                     await interaction.response.send_message(f'{member.mention} has been muted for {duration[:-1]} days(s) for:\n {reason}')
             elif duration[-1].lower() == 'w'.lower():
                 await member.timeout(datetime.timedelta(weeks=int(duration[:-1])))
-                if reason != "":
-                    await interaction.response.send_message(f"{member.mention} has been muted for {reason}.")
-                else:
-                    await interaction.response.send_message(f'{member.mention} has been muted.')
+                if reason == None:
+                    await interaction.response.send_message(f"{member.mention} has been muted.")
             else:
                 await interaction.response.send_message("I'm sorry, this input is incorrect. Input a number (I.E: 10) followed by either s, m, h, or d (seconds, minutes, hours or days).", ephemeral=True)
 
